@@ -1,0 +1,220 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Image Gallery</title>
+    <style>
+        /* Top bar container */
+        #top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Text for Imran */
+        #top-bar #name {
+            font-size: 20px;
+            padding-left: 10px;
+        }
+
+        /* Buttons container */
+        #top-bar #buttons {
+            padding-right: 10px;
+        }
+
+        #buttons button {
+            font-size: 24px;
+            padding: 5px 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        #buttons button:hover {
+            color: #007bff;
+        }
+
+        /* Body styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Gallery container */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 60px 10px 10px;
+            justify-content: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Default list view for images */
+        .gallery img {
+            width: calc(100% - 20px);
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+
+            transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+        }
+
+        /* Image hover effect */
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Grid view for images */
+        .grid-view img {
+            width: calc(33.333% - 10px);
+            height: auto;
+        }
+
+        /* Media queries */
+        @media (max-width: 768px) {
+            .grid-view img {
+                width: calc(50% - 10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-view img {
+                width: calc(33.333% - 10px);
+            }
+
+            /* Adjust top bar for mobile */
+            #top-bar {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            #top-bar #name {
+                padding-left: 10px;
+            }
+
+            #top-bar #buttons {
+                padding-right: 10px;
+            }
+        }
+
+        /* Overlay styling */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.99);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .overlay img {
+            max-width: 90%;
+            height: auto;
+        }
+
+        /* Bottom-centered text in overlay */
+        .overlay p {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 14px;
+            font-family: sans-serif;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top bar -->
+    <div id="top-bar">
+        <div>
+            <a href="https://api.whatsapp.com/send?phone=919014651031&text=I%20want%20to%20get%20a%20new%20face(logo)%20for%20my%20company" target="_blank">
+                CONTACT
+            </a>
+        </div>
+        <div id="name">IMRAN SHAIK</div>
+        <div id="buttons">
+            <button id="list-view-btn">■</button>
+            <button id="grid-view-btn">◆</button>
+        </div>
+    </div>
+
+    <!-- Image gallery -->
+    <div class="gallery" id="gallery">
+        <!-- Images -->
+        <img src="logo1.jpg" alt="Image 1">
+        <img src="logo2.jpg" alt="Image 2">
+        <img src="logo3.jpg" alt="Image 3">
+        <img src="logo4.jpg" alt="Image 4">
+        <img src="logo5.jpg" alt="Image 5">
+        <img src="logo6.jpg" alt="Image 6">
+        <img src="logo7.jpg" alt="Image 7">
+        <img src="logo8.jpg" alt="Image 8">
+        <img src="logo9.jpg" alt="Image 9">
+        <img src="logo10.jpg" alt="Image 10">
+        <img src="logo11.jpg" alt="Image 11">
+        <img src="logo12.jpg" alt="Image 12">
+        <img src="logo13.jpg" alt="Image 13">
+        <img src="logo14.jpg" alt="Image 14">
+        <img src="logo15.jpg" alt="Image 15">
+        <img src="logo16.jpg" alt="Image 16">
+    </div>
+   
+    <!-- Overlay -->
+    <div class="overlay" id="overlay">
+        <img id="blurred-image" src="" alt="Clicked Image">
+        <p>Ah! You liked it, I know, Let's design your new Logo!</p>
+    </div>
+
+    <!-- Script for view toggle and overlay -->
+    <script>
+        const gallery = document.getElementById('gallery');
+        const listViewBtn = document.getElementById('list-view-btn');
+        const gridViewBtn = document.getElementById('grid-view-btn');
+        const overlay = document.getElementById('overlay');
+        const blurredImage = document.getElementById('blurred-image');
+        const images = document.querySelectorAll('.gallery img');
+
+        // Toggle between list and grid view
+        listViewBtn.addEventListener('click', () => {
+            gallery.classList.remove('grid-view');
+        });
+
+        gridViewBtn.addEventListener('click', () => {
+            gallery.classList.add('grid-view');
+        });
+
+        // Show overlay with clear image when clicked
+        images.forEach((img) => {
+            img.addEventListener('click', () => {
+                overlay.style.display = 'flex';
+                blurredImage.src = img.src; // Display the clicked image clearly
+            });
+        });
+
+        // Close overlay when clicked
+        overlay.addEventListener('click', () => {
+            overlay.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
